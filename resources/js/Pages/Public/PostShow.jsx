@@ -1,7 +1,6 @@
 import React from 'react';
 import { Head, Link } from '@inertiajs/react';
 import PublicLayout from '../../Layouts/PublicLayout';
-import MarkdownViewer from '../../Components/MarkdownViewer';
 
 export default function PostShow({ post }) {
   return (
@@ -36,8 +35,11 @@ export default function PostShow({ post }) {
           </figure>
         )}
 
-        {/* Markdown Content Renderer */}
-        <MarkdownViewer content={post.content} />
+        {/* Server-rendered Markdown HTML — no heavy editor JS/CSS needed */}
+        <div
+          className="prose-content"
+          dangerouslySetInnerHTML={{ __html: post.content_html || post.content }}
+        />
       </article>
 
       {/* Kartu Ajakan Komunitas */}
