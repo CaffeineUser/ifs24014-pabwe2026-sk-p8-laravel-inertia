@@ -2,7 +2,8 @@
 
 namespace App\Features\Post\Services;
 
-use Illuminate\Database\Collection;
+use Illuminate\Database\Eloquent\Collection;
+use Illuminate\Support\Collection as BaseCollection;
 use PhpOffice\PhpSpreadsheet\IOFactory;
 use PhpOffice\PhpSpreadsheet\Spreadsheet;
 use PhpOffice\PhpSpreadsheet\Writer\Xlsx;
@@ -10,7 +11,7 @@ use Symfony\Component\HttpFoundation\StreamedResponse;
 
 class PostExcelService
 {
-    public function export(Collection $posts): StreamedResponse
+    public function export(BaseCollection|Collection|iterable $posts): StreamedResponse
     {
         $spreadsheet = new Spreadsheet;
         $sheet = $spreadsheet->getActiveSheet();
