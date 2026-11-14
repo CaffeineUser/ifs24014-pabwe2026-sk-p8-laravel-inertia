@@ -14,6 +14,13 @@ return Application::configure(basePath: dirname(__DIR__))
         health: '/up',
     )
     ->withMiddleware(function (Middleware $middleware): void {
+        // Trust all proxies (required for HTTPS detection behind cloud load balancers)
+        $middleware->trustProxies(at: '*', headers: Request::HEADER_X_FORWARDED_FOR |
+            Request::HEADER_X_FORWARDED_HOST |
+            Request::HEADER_X_FORWARDED_PORT |
+            Request::HEADER_X_FORWARDED_PROTO |
+            Request::HEADER_X_FORWARDED_AWS_ELB);
+
         $middleware->redirectTo(
             guests: '/login',
             users: fn (Request $request) => $request->user()?->isAdmin() ? '/admin/posts' : '/dashboard/posts',
