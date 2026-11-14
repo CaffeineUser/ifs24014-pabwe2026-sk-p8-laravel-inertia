@@ -84,4 +84,18 @@ class PostTest extends TestCase
         $responseAllPosts = $this->actingAs($admin)->get('/admin/posts');
         $responseAllPosts->assertStatus(200);
     }
+
+    public function test_authenticated_user_is_redirected_from_guest_routes(): void
+    {
+        $member = User::factory()->create(['role' => 'member']);
+        $admin = User::factory()->create(['role' => 'admin']);
+
+        // Member visiting login should be redirected to dashboard
+        $responseMember = $this->actingAs($member)->get('/login');
+        $responseMember->assertRedirect('/dashboard/posts');
+
+        // Admin visiting login should be redirected to admin posts
+        $responseAdmin = $this->actingAs($admin)->get('/login');
+        $responseAdmin->assertRedirect('/admin/posts');
+    }
 }
