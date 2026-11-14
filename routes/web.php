@@ -37,23 +37,23 @@ Route::post('/logout', [AuthController::class, 'destroyLogout'])->middleware('au
 | Referensi: Bagian 3.2 & 3.5[cite: 1]
 */
 Route::middleware(['auth'])->prefix('dashboard')->name('dashboard.')->group(function () {
-    // Manajemen Artikel Mandiri (CRUD)
-    Route::get('/posts', [PostController::class, 'index'])->name('posts.index');
-    Route::post('/posts', [PostController::class, 'store'])->name('posts.store');
-    Route::get('/posts/{post}', [PostController::class, 'show'])->name('posts.show');
-    Route::put('/posts/{post}', [PostController::class, 'update'])->name('posts.update');
-    Route::delete('/posts/{post}', [PostController::class, 'destroy'])->name('posts.destroy');
-
-    // Fitur Tambahan: Publish Toggle & Cover Image
-    Route::patch('/posts/{post}/publish', [PostController::class, 'togglePublish'])->name('posts.publish');
-    Route::post('/posts/{post}/cover', [PostController::class, 'uploadCover'])->name('posts.cover.upload');
-    Route::delete('/posts/{post}/cover', [PostController::class, 'deleteCover'])->name('posts.cover.delete');
-
-    // Fitur Excel (PhpSpreadsheet) & OpenAI AI-Generator
+    // Fitur Excel (PhpSpreadsheet) & OpenAI AI-Generator (didefinisikan sebelum route berparameter {post})
     Route::get('/posts/export', [PostController::class, 'exportExcel'])->name('posts.export');
     Route::post('/posts/import', [PostController::class, 'importExcel'])->name('posts.import');
     Route::post('/posts/ai-generate', [PostController::class, 'aiGenerate'])->name('posts.ai.generate');
     Route::post('/posts/ai-save', [PostController::class, 'aiSaveBatch'])->name('posts.ai.save');
+
+    // Manajemen Artikel Mandiri (CRUD)
+    Route::get('/posts', [PostController::class, 'index'])->name('posts.index');
+    Route::post('/posts', [PostController::class, 'store'])->name('posts.store');
+    Route::get('/posts/{post}', [PostController::class, 'show'])->whereNumber('post')->name('posts.show');
+    Route::put('/posts/{post}', [PostController::class, 'update'])->whereNumber('post')->name('posts.update');
+    Route::delete('/posts/{post}', [PostController::class, 'destroy'])->whereNumber('post')->name('posts.destroy');
+
+    // Fitur Tambahan: Publish Toggle & Cover Image
+    Route::patch('/posts/{post}/publish', [PostController::class, 'togglePublish'])->whereNumber('post')->name('posts.publish');
+    Route::post('/posts/{post}/cover', [PostController::class, 'uploadCover'])->whereNumber('post')->name('posts.cover.upload');
+    Route::delete('/posts/{post}/cover', [PostController::class, 'deleteCover'])->whereNumber('post')->name('posts.cover.delete');
 });
 
 // Manajemen Profil Pengguna
