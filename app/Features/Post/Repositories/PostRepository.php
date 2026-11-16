@@ -13,7 +13,7 @@ class PostRepository implements PostRepositoryInterface
     {
         return Post::with('user')
             ->where('isPublished', true)
-            ->when($search, fn ($q) => $q->where('title', 'ilike', "%{$search}%"))
+            ->when($search, fn ($q) => $q->whereRaw('LOWER(title) LIKE ?', ['%'.mb_strtolower($search).'%']))
             ->when($category, fn ($q) => $q->where('category', $category))
             ->latest('published_at')
             ->paginate($perPage)
